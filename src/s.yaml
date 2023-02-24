@@ -1,0 +1,48 @@
+edition: 1.0.0
+name: dependency-check-app
+access: "{{ access }}"
+
+vars: # global vaules
+  region: "cn-hangzhou"
+  service:
+    name: "{{ region }}"
+    description: 'dependency-check fc function code'
+    role: "{{ roleArn }}"
+
+services:
+  dependency-check: 
+    component: fc 
+    actions: 
+      pre-deploy: 
+        - plugin: layer-fc
+          args:
+            name: DependencyCheck
+            codeUri: http://devsapp.functioncompute.com/devsapp/dependency-check.zip
+            #forceUpdate: true
+            runtime:
+              - custom
+              - custom.debian10
+    props:
+      region: ${vars.region} 
+      service: ${vars.service}
+      function:
+        name: "{{ functionName }}"
+        description: 'dependency-check fc function code'
+        timeout: 1800
+        cpu: 2
+        memorySize: 2048
+        diskSize: 10240
+        runtime: custom
+        codeUri: ./code
+        instanceConcurrency: 1
+        customRuntimeConfig:
+          command:
+            - python
+          args:
+            - -u
+            - server.py
+        environmentVariables:
+          PATH: /opt/dependency-check/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/ruby/bin:/usr/local/bin/apache-maven/bin
+          PYTHONPATH: /opt/python 
+          BUCKET: "{{ ossBucket }}"
+          TZ: "{{ timeZone }}"
