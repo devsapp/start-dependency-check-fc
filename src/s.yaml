@@ -3,9 +3,9 @@ name: dependency-check-app
 access: "{{ access }}"
 
 vars: # global vaules
-  region: "cn-hangzhou"
+  region: "{{ region }}"
   service:
-    name: "{{ region }}"
+    name: "{{ serviceName }}"
     description: 'dependency-check fc function code'
     role: "{{ roleArn }}"
 
@@ -46,3 +46,14 @@ services:
           PYTHONPATH: /opt/python 
           BUCKET: "{{ ossBucket }}"
           TZ: "{{ timeZone }}"
+      triggers:
+        - name: fc-code-change-listener
+          type: eventbridge
+          config:
+            triggerEnable: true
+            asyncInvocationType: false
+            eventRuleFilterPattern: '{"source":["acs.fc"],"type":["fc:Function:CreateSuccess","fc:Function:UpdateSuccess"]}'
+            eventSinkConfig:
+              deliveryOption:
+                mode: event-driven
+                eventSchema: RawData

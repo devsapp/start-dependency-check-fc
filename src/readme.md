@@ -43,7 +43,8 @@
 | 服务 |  备注  |
 | --- |  --- |
 | 函数计算 FC |  安全扫描的逻辑函数需要部署到函数计算 |
-| 对象存储 OSS |  安全扫描后的html报告保存到对象存储 |
+| 对象存储 OSS |  安全扫描后的 html 报告保存到对象存储 |
+| 事件总线 EventBridge |  监听函数代码包变化，自动触发安全扫描函数的运行，注意：EventBridge 开通以后， 需要在控制台完成一键授权 |
 
 </service>
 
@@ -91,14 +92,22 @@
 
 <appdetail id="flushContent">
 
-项目部署完成，可以通过`invoke`命令(或者在函数计算控制台)进行触发/测试：
+## 注意
+EventBridge 开通以后， 请记得一定在 EventBridge控制台完成一键授权
+
+![](http://image.editor.devsapp.cn/alibaba/1ZskrcBFExw9Fuuadhwz.png)
+
+
+## 测试
+项目部署完成后， 可以通过`invoke`命令(或者在函数计算控制台)进行触发/测试：
 
 ```bash
 # 调用
 $ s invoke -e '{"serviceName":"xiliu-test", "functionName":"test-java8"}'
 ```
 
-函数调用成功后，会返回生成的html报告文件在对象存储 OSS 上的地址， 比如：
+
+函数调用成功后，会返回生成的 html 报告文件在对象存储 OSS 上的地址， 比如：
 
 ```
 https://oss.console.aliyun.com/bucket/oss-cn-hangzhou/ali-nangua/object?path=dependency-check/xiliu-test/test-java8/
@@ -108,10 +117,12 @@ https://oss.console.aliyun.com/bucket/oss-cn-hangzhou/ali-nangua/object?path=dep
 
 ![](http://image.editor.devsapp.cn/alibaba/vjcduwe85hE2dAwS4kvA.png)
 
-
 下载 html 报告， 示例如下：
 
 ![](http://image.editor.devsapp.cn/alibaba/3d79E3vxge69EqFwB8Ek.png)
+
+
+
 
 </appdetail>
 
@@ -119,7 +130,7 @@ https://oss.console.aliyun.com/bucket/oss-cn-hangzhou/ali-nangua/object?path=dep
 
 <usedetail id="flushContent">
 
-TODO,  使用 EB 集成 create 和 update function 的事件触发
+当您在该检测函数同 region 进行创建函数或者更新函数的时候， 函数计算操作审计事件会将 `fc:Function:CreateSuccess` 和 `fc:Function:UpdateSuccess` 事件通过 EventBridge 触发检测函数的执行 
 
 </usedetail>
 
