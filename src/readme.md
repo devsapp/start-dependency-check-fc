@@ -56,6 +56,7 @@
 | 服务/业务 |  权限 |  备注  |
 | --- |  --- |   --- |
 | 函数计算 | AliyunFCFullAccess |  安全扫描的逻辑函数需要部署到函数计算 |
+| 函数计算 | AliyunEventBridgeFullAccess |  函数计算操作审计将函数代码包变更事件通过 EB 触发器触发函数执行 |
 
 </auth>
 
@@ -121,16 +122,13 @@ https://oss.console.aliyun.com/bucket/oss-cn-hangzhou/ali-nangua/object?path=dep
 
 ![](http://image.editor.devsapp.cn/alibaba/3d79E3vxge69EqFwB8Ek.png)
 
-
-
-
 </appdetail>
 
 ## 使用文档
 
 <usedetail id="flushContent">
 
-当您在该检测函数同 region 进行创建函数或者更新函数的时候， 函数计算操作审计事件会将 `fc:Function:CreateSuccess` 和 `fc:Function:UpdateSuccess` 事件通过 EventBridge 触发检测函数的执行 
+当您在该检测函数同 region 进行创建函数或者更新函数的时候， 函数计算操作审计事件会将 fc:Function:CreateSuccess和 fc:Function:UpdateSuccess 事件通过 EventBridge 触发检测函数的执行
 
 </usedetail>
 

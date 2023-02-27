@@ -2,7 +2,7 @@ Type: Application
 Name: start-dependency-check-fc
 Provider:
   - 阿里云
-Version: 0.0.4
+Version: 0.0.5
 Description: 快速部署一个对函数代码包进行安全扫描的应用到阿里云函数计算
 HomePage: https://github.com/devsapp/start-dependency-check-fc
 Tags:
@@ -13,6 +13,7 @@ Service:
   函数计算:
     Authorities:
       - AliyunFCFullAccess
+      - AliyunEventBridgeFullAccess
 Parameters:
   type: object
   additionalProperties: false # 不允许增加其他属性
