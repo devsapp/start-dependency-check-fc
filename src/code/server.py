@@ -21,7 +21,8 @@ fcAccessKeySecret = "x-fc-access-key-secret"
 fcSecurityToken = "x-fc-security-token"
 fcRegion = "x-fc-region"
 fcAccountID = "x-fc-account-id"
-
+fcServiceName = "x-fc-service-name"
+fcFunctionName = "x-fc-function-name"
 
 class CustomHandler(BaseHTTPRequestHandler):
     def gen_report_html(self, serviceName, functionName):
@@ -94,7 +95,12 @@ class CustomHandler(BaseHTTPRequestHandler):
             evt = json.loads(req_datas)
             serviceName = evt["serviceName"]
             functionName = evt["functionName"]
-            report_url = self.gen_report_html(serviceName, functionName)
+            my_serviceName = self.headers.get(fcServiceName)
+            my_functionName = self.headers.get(fcFunctionName)
+            if my_serviceName == serviceName and my_functionName == functionName:
+                report_url = "skip check"
+            else:
+                report_url = self.gen_report_html(serviceName, functionName)
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
