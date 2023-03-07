@@ -8,6 +8,7 @@ vars: # global vaules
     name: "{{ serviceName }}"
     description: 'dependency-check fc function code'
     role: "{{ roleArn }}"
+    nasConfig: auto
 
 services:
   dependency-check: 
@@ -16,12 +17,11 @@ services:
       pre-deploy: 
         - plugin: layer-fc
           args:
-            name: DependencyCheck
-            codeUri: http://devsapp.functioncompute.com/devsapp/dependency-check.zip
-            #forceUpdate: true
+            name: Dependency-Check-V812
+            codeUri: http://devsapp.functioncompute.com/devsapp/dependency-check-8.1.2-release.zip
+            forceUpdate: true
             runtime:
               - custom
-              - custom.debian10
     props:
       region: ${vars.region} 
       service: ${vars.service}
@@ -43,9 +43,11 @@ services:
             - server.py
         environmentVariables:
           PATH: /opt/dependency-check/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/ruby/bin:/usr/local/bin/apache-maven/bin
-          PYTHONPATH: /opt/python 
           BUCKET: "{{ ossBucket }}"
           TZ: "{{ timeZone }}"
+        layers:
+          - acs:fc:${vars.region}:official:layers/Python310/versions/2
+          - acs:fc:${vars.region}:official:layers/Python310-Package-Collection/versions/2
       triggers:
         - name: fc-code-change-listener
           type: eventbridge

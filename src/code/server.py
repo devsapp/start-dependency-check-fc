@@ -24,6 +24,7 @@ fcAccountID = "x-fc-account-id"
 fcServiceName = "x-fc-service-name"
 fcFunctionName = "x-fc-function-name"
 
+
 class CustomHandler(BaseHTTPRequestHandler):
     def gen_report_html(self, serviceName, functionName):
         access_key_id = self.headers.get(fcAccessKeyID)
@@ -119,10 +120,18 @@ class CustomHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header("x-fc-status", "404")
             self.end_headers()
-            self.wfile.write(json.dumps(errRet))
+            self.wfile.write(json.dumps(errRet).encode())
 
 
 if __name__ == "__main__":
+    if not os.path.exists("/mnt/auto/data"):
+        os.mkdir("/mnt/auto/data")
+
+    try:
+        os.symlink("/mnt/auto/data", "/opt/dependency-check/data")
+    except:
+        pass
+
     webServer = HTTPServer((hostName, serverPort), CustomHandler)
     print("Server started http://%s:%s" % (hostName, serverPort))
 
