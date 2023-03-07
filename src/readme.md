@@ -45,6 +45,7 @@
 | 函数计算 FC |  安全扫描的逻辑函数需要部署到函数计算 |
 | 对象存储 OSS |  安全扫描后的 html 报告保存到对象存储 |
 | 事件总线 EventBridge |  监听函数代码包变化，自动触发安全扫描函数的运行，注意：EventBridge 开通以后， 需要在控制台完成一键授权 |
+| 文件存储 NAS |  安全扫描的漏洞库离线持久化存储， 防止每次都在线请求下载最新的漏洞库 |
 
 </service>
 
@@ -56,7 +57,10 @@
 | 服务/业务 |  权限 |  备注  |
 | --- |  --- |   --- |
 | 函数计算 | AliyunFCFullAccess |  安全扫描的逻辑函数需要部署到函数计算 |
-| 函数计算 | AliyunEventBridgeFullAccess |  函数计算操作审计将函数代码包变更事件通过 EB 触发器触发函数执行 |
+| 硬盘挂载 | AliyunNASFullAccess |  安全扫描的漏洞库离线持久化存储 |
+| VPC | AliyunVPCFullAccess |  NAS 挂载点需要有 VPC |
+| Eventbridge | AliyunEventBridgeFullAccess |  函数计算操作审计将函数代码包变更事件通过 EB 触发器触发函数执行 |
+| 其他 | AliyunECSFullAccess |  函数计算挂载 NAS 需要有安全组 |
 
 </auth>
 
@@ -94,19 +98,19 @@
 <appdetail id="flushContent">
 
 ## 注意
-EventBridge 开通以后， 请记得一定在 EventBridge控制台完成一键授权
+
+EventBridge 开通以后， 请记得一定在 EventBridge 控制台完成一键授权
 
 ![](http://image.editor.devsapp.cn/alibaba/1ZskrcBFExw9Fuuadhwz.png)
 
-
 ## 测试
+
 项目部署完成后， 可以通过`invoke`命令(或者在函数计算控制台)进行触发/测试：
 
 ```bash
 # 调用
 $ s invoke -e '{"serviceName":"xiliu-test", "functionName":"test-java8"}'
 ```
-
 
 函数调用成功后，会返回生成的 html 报告文件在对象存储 OSS 上的地址， 比如：
 
@@ -128,7 +132,7 @@ https://oss.console.aliyun.com/bucket/oss-cn-hangzhou/ali-nangua/object?path=dep
 
 <usedetail id="flushContent">
 
-当您在该检测函数同 region 进行创建函数或者更新函数的时候， 函数计算操作审计事件会将 fc:Function:CreateSuccess和 fc:Function:UpdateSuccess 事件通过 EventBridge 触发检测函数的执行
+当您在该检测函数同 region 进行创建函数或者更新函数的时候， 函数计算操作审计事件会将 fc:Function:CreateSuccess 和 fc:Function:UpdateSuccess 事件通过 EventBridge 触发检测函数的执行
 
 </usedetail>
 
