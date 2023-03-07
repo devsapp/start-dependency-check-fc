@@ -19,7 +19,7 @@ services:
           args:
             name: Dependency-Check-V812
             codeUri: http://devsapp.functioncompute.com/devsapp/dependency-check-8.1.2-release.zip
-            forceUpdate: true
+            #forceUpdate: true
             runtime:
               - custom
     props:
@@ -42,7 +42,7 @@ services:
             - -u
             - server.py
         environmentVariables:
-          PATH: /opt/dependency-check/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/ruby/bin:/usr/local/bin/apache-maven/bin
+          PATH: /opt/dependency-check/bin:/opt/python3.10/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin:/usr/local/ruby/bin:/usr/local/bin/apache-maven/bin
           BUCKET: "{{ ossBucket }}"
           TZ: "{{ timeZone }}"
         layers:
